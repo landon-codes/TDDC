@@ -2,16 +2,24 @@ using System.Globalization;
 
 namespace TDDC;
 
-public readonly struct Arguments(DateTime startDate, DateTime endDate, int startPage, int endPage)
-{
-	public readonly DateTime StartingDate = startDate;
-	public readonly DateTime DueDate = endDate;
-	public readonly int StartingPage = startPage;
-	public readonly int EndingPage = endPage;
-}
+
 
 public static class ArgumnentParser
 {	
+	public readonly struct Arguments
+	{
+		public readonly DateTime StartingDate;
+		public readonly DateTime DueDate;
+		public readonly int Pages;
+
+		public Argument(DateTime startingDate, DateTime dueDate, int pages)
+		{
+			StartingDate = startingDate;
+			DueDate = dueDate;
+			Pages = pages;
+		}
+	}
+
 	private static string CannotParseDateError = "We were unable to parse the date(s) given.\n Maybe try another format.";
 	private static string CannotParsePageError = "We were unable to parse the page(s) given.\n Make sure they are only a number.";
 	
@@ -49,6 +57,7 @@ public static class ArgumnentParser
 		DateTime? endDate = null;
 		int? startPage = null;
 		int? endPage = null;
+		int? pages = null;
 		
 		while (index < args.Length)
 		{
@@ -117,6 +126,23 @@ public static class ArgumnentParser
 					Environment.Exit(1);
 				}
 			}
+
+			else if (argument == "-c" || argument == "--pageCount" && CanContinue())
+			{
+				if (!CanContinue()) ThrowMissingArgumentError("-c");
+
+				var argumentValue = GetNextArg();
+
+				try
+				{
+					pages = Convert.ToInt16(argumentValue);
+				}
+				catch
+				{
+					Console.WriteLine(CannotParsePageError);
+					Environment.Exit(-1);
+				}
+			}
 		}
 
 		bool exit = false;
@@ -125,18 +151,23 @@ public static class ArgumnentParser
 			Console.WriteLine("An ending date must be provided.");
 			exit = true;
 		}
-		if (startPage == null)
+		if (startPage == null && pages == null)
 		{
 			Console.WriteLine("A starting page must be provided.");
 			exit = true;
 		}
-		if (endPage == null)
+		if (endPage == null && pages == null)
 		{
 			Console.WriteLine("An ending page must be provided.");
 			exit = true;
 		}
 		if (exit) Environment.Exit(1);
 
-		return new Arguments(startingDate, (DateTime)endDate!, (int)startPage!, (int)endPage!);
+		if (pages == null && startPage != null && endPage != null)
+		{
+			pages = endPage - startPage;
+		}
+
+		return new Arguments(startingDate, (DateTime)endDate!, (int)pages!);
 	}
 }
