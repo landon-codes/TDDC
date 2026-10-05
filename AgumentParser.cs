@@ -61,12 +61,10 @@ public static class ArgumnentParser
 		
 		while (index < args.Length)
 		{
-			var argument = args[index];
+			var argument = GetNextArg();
 
-			if (argument == "-s" || argument == "--start")
+			if (argument == "-s" || argument == "--start" && CanContinue())
 			{
-				if (!CanContinue()) ThrowMissingArgumentError("-s");
-
 				var argumentValue = GetNextArg();
 
 				if (!ParseDate(argumentValue, out var parsedDate)) 
@@ -80,8 +78,6 @@ public static class ArgumnentParser
 
 			else if (argument == "-d" || argument == "--dueDate" && CanContinue())
 			{
-				if (!CanContinue()) ThrowMissingArgumentError("-d");
-				
 				var argumentValue = GetNextArg();
 
 				if (!ParseDate(argumentValue, out var parsedDate))
@@ -95,8 +91,6 @@ public static class ArgumnentParser
 
 			else if (argument == "-p" || argument == "--startingPage" && CanContinue())
 			{
-				if (!CanContinue()) ThrowMissingArgumentError("-p");
-				
 				var argumentValue = GetNextArg();
 
 				try
@@ -112,8 +106,6 @@ public static class ArgumnentParser
 
 			else if (argument == "-e" || argument == "--endPage" && CanContinue())
 			{
-				if (!CanContinue()) ThrowMissingArgumentError("-e");
-				
 				var argumentValue = GetNextArg();
 
 				try
@@ -129,8 +121,6 @@ public static class ArgumnentParser
 
 			else if (argument == "-c" || argument == "--pageCount" && CanContinue())
 			{
-				if (!CanContinue()) ThrowMissingArgumentError("-c");
-
 				var argumentValue = GetNextArg();
 
 				try
