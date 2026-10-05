@@ -12,7 +12,7 @@ public static class ArgumnentParser
 		public readonly DateTime DueDate;
 		public readonly int Pages;
 
-		public Argument(DateTime startingDate, DateTime dueDate, int pages)
+		public Arguments(DateTime startingDate, DateTime dueDate, int pages)
 		{
 			StartingDate = startingDate;
 			DueDate = dueDate;
