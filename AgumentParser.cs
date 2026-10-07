@@ -2,8 +2,6 @@ using System.Globalization;
 
 namespace TDDC;
 
-
-
 public static class ArgumnentParser
 {	
 	public readonly struct Arguments
@@ -40,12 +38,6 @@ public static class ArgumnentParser
 			parsedData = parsedDate;
 
 			return result;
-		}
-
-		void ThrowMissingArgumentError(string argumentName)
-		{			 
-			Console.WriteLine($"Argument {argumentName} is missing a value.");
-			Environment.Exit(1);
 		}
 
 		int index = 0;
